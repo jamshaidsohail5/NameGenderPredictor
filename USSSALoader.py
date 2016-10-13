@@ -1,84 +1,86 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3.5
 # encoding: utf-8
+
 """
-USSSALoader.py
+    USSSALoader.py
 """
+
 import os
-import re
-import urllib2
 from zipfile import ZipFile
-import csv
+from urllib import request
+
 import pickle
-        
-def getNameList():
-    if not os.path.exists('names.pickle'):
-        print 'names.pickle does not exist, generating'
-        if not os.path.exists('names.zip'):
-            print 'names.zip does not exist, downloading from github'
-            downloadNames()
-        else:
-            print 'names.zip exists, not downloading'
+
+pickle_file = 'name.pickle'
+zip_file = 'names.zip'
+
+
+def download_names():
+    u = request.urlopen('https://github.com/downloads/sholiday/genderPredictor/names.zip')
+    with open(zip_file, 'wb') as file:
+        file.write(u.read())
     
-        print 'Extracting names from names.zip'
-        namesDict=extractNamesDict()
-        
-        maleNames=list()
-        femaleNames=list()
-        
-        print 'Sorting Names'
-        for name in namesDict:
-            counts=namesDict[name]
-            tuple=(name,counts[0],counts[1])
-            if counts[0]>counts[1]:
-                maleNames.append(tuple)
-            elif counts[1]>counts[0]:
-                femaleNames.append(tuple)
-        
-        names=(maleNames,femaleNames)
-        
-        print 'Saving names.pickle'
-        fw=open('names.pickle','wb')
-        pickle.dump(names,fw,-1)
-        fw.close()
-        print 'Saved names.pickle'
-    else:
-        print 'names.pickle exists, loading data'
-        f=open('names.pickle','rb')
-        names=pickle.load(f)
-        print 'names.pickle loaded'
-        
-    print '%d male names loaded, %d female names loaded'%(len(names[0]),len(names[1]))
     
-    return names
-    
-def downloadNames():
-    u = urllib2.urlopen('https://github.com/downloads/sholiday/genderPredictor/names.zip')
-    localFile = open('names.zip', 'w')
-    localFile.write(u.read())
-    localFile.close()
-    
-def extractNamesDict():
-    zf=ZipFile('names.zip', 'r')
-    filenames=zf.namelist()
-    
-    names=dict()
-    genderMap={'M':0,'F':1}
-    
-    for filename in filenames:
-        file=zf.open(filename,'r')
-        rows=csv.reader(file, delimiter=',')
-        
+def extract_names_dict():
+    zf = ZipFile(zip_file, 'r')
+    file_names = zf.namelist()
+    names = dict()
+    gender_map = {'M': 0, 'F': 1}
+    for file_name in file_names:
+        file = zf.open(file_name, 'r').read().decode('utf-8')
+        infile = file.split('\n')
+        rows = [row.strip().split(',') for row in infile if len(row) > 1]
         for row in rows:
-            name=row[0].upper()
-            gender=genderMap[row[1]]
-            count=int(row[2])
-            
-            if not names.has_key(name):
-                names[name]=[0,0]
-            names[name][gender]=names[name][gender]+count
-            
-        file.close()
-        print '\tImported %s'%filename
+            name = row[0].upper()
+            gender = gender_map[row[1]]
+            count = int(row[2])
+            if name not in names:
+                names[name] = [0,0]
+            names[name][gender] = names[name][gender] + count
+        print('Imported - {}'.format(file_name))
     return names
+            
+            
+def get_name_list():
+    if not os.path.exists(pickle_file):
+        print('{} does not exist, generating'.format(pickle_file))
+        
+        if not os.path.exists(zip_file):
+            print('{} does not exist, downloading from github')
+            download_names()
+        else:
+            print('{} exists, not downloading'.format(zip_file))
+            
+        print('Extracting names from {}'.format(zip_file))
+        names_dict = extract_names_dict()
+        
+        male_names = list()
+        female_names = list()
+        
+        print('Sorting Names')
+        for name in names_dict:
+            counts = names_dict[name]
+            data = (name, counts[0], counts[1])
+            if counts[0] > counts[1]:
+                male_names.append(data)
+            elif counts[1] > counts[0]:
+                female_names.append(data)
+        
+        names = (male_names, female_names)
+        print('Saving {}'.format(pickle_file))
+        fw = open(pickle_file, 'wb')
+        pickle.dump(names, fw, -1)
+        fw.close()
+        print('Saved {}'.format(pickle_file))
+    else:
+        print('{} exists, loading data'.format(pickle_file))
+        f = open(pickle_file, 'rb')
+        names = pickle.load(f)
+        print('{} loaded'.format(pickle_file))
+            
+    print('{} males names loaded, {} female loaded'.format(len(names[0]), len(names[1])))
+    return names
+    
+
 if __name__ == "__main__":
-    getNameList()
+    get_name_list()
