@@ -1,4 +1,4 @@
-Forked Stephen Holiday's (Special Thanks & Kudos to him) project and migrated for Python3.5 for learning purpose.
+Forked Stephen Holiday's (Special Thanks & Kudos to him) project and migrated to Python3.5 for learning purpose.
 
 ```plain
 name.pickle exists, loading data
