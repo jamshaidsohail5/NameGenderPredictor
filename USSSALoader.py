@@ -46,7 +46,7 @@ def get_name_list():
         print('{} does not exist, generating'.format(pickle_file))
         
         if not os.path.exists(zip_file):
-            print('{} does not exist, downloading from github')
+            print('{} does not exist, downloading from github'.format(zip_file))
             download_names()
         else:
             print('{} exists, not downloading'.format(zip_file))
