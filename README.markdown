@@ -1,5 +1,52 @@
 Forked Stephen Holiday's (Special Thanks & Kudos to him) project and migrated to Python3.5 for learning purpose.
 
+**Sample Male Names Dataset - (name, count(name treated as a male), count(name treated as a female))**
+```plain
+[('SEYMOUR', 13030, 10), ('ARMANNI', 35, 11), ('TAJAI', 155, 147), ('JOSHUS', 171, 0), ('KUNTE', 26, 0), ('OTIES', 17, 0), ('RAYBORN', 48, 0), ('UBAID', 13, 0), ('GOTTLOB', 5, 0), ('LEVIT', 10, 0)]
+```
+**Sample Female Names Dataset - (name, count(treated as a male), count(treated as a female))**
+```plain
+[('TALESA', 0, 37), ('BRIGIDA', 0, 654), ('JOHNESE', 0, 41), ('DAMAYAH', 0, 18), ('JOSHELIN', 0, 14), ('GAOLEE', 0, 5), ('CANDIDA', 0, 3551), ('TAYHA', 0, 15), ('STEEVIE', 0, 5), ('CHRISOULA', 0, 97)]
+```
+**Probability Distribution - Calculation for Each Name**
+```plain
+male_probability = total_male_count / (total_male_count + total_female_count)
+
+[Some Rules/Condition below this line. Seriously I don't know why we do this. 
+But all that I know is no system can hold the value 1.0 in probability]
+
+if male_probability == 1.0:
+	male_probability = 0.99
+elif male_probability == 0.0:
+	male_probability = 0.01
+
+female_probability = 1.0 - male_probability
+```
+
+**Sample Feature Set**
+```plain
+({
+	'male_prob': 0.9992331288343558, 
+	'last_two': 'UR', 
+	'last_is_vowel': False, 
+	'last_letter': 'R', 
+	'female_prob': 0.0007668711656442229, 
+	'last_three': 'OUR'}, 
+'M')
+
+({
+	'male_prob': 0.99, 
+	'last_two': 'WA', 
+	'last_is_vowel': True, 
+	'last_letter': 'A', 
+	'female_prob': 0.010000000000000009, 
+	'last_three': 'EWA'}, 
+'M')
+
+```
+
+
+**Output - Preview**
 ```plain
 name.pickle exists, loading data
 name.pickle loaded
