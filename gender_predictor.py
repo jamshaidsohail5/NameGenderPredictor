@@ -84,7 +84,7 @@ if __name__ == "__main__":
     gp = GenderPredictor()
     
     accuracy = gp.train_and_test(training_percent=0.80)
-    print('\nccuracy: {}'.format(accuracy))
+    print('\nAccuracy: {}'.format(accuracy))
     
     print("\nMost Informative Features")
     features = gp.get_most_informative_features(n=10)
