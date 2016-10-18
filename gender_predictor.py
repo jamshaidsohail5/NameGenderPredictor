@@ -93,7 +93,7 @@ if __name__ == "__main__":
     
     print('\n<<<  Testing Module   >>> \nEnter "q" or "quit" to end testing module')
     while 1:
-        test_name = input('Enter name to classify: ')
+        test_name = input('\nEnter name to classify: ')
         if test_name.lower() == 'q' or test_name.lower() == 'quit':
             print('End')
             exit(1)
